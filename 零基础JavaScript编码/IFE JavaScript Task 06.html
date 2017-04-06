@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>task 06</title>
+	<style>
+		body{
+			text-align: center;
+		}
+
+		#container div {
+		                display: inline-block;
+		                font-size: 30px;
+		                
+		                padding: 0 15px;
+		                margin: 2px 0;
+		                margin-right: 10px;
+		                height: 50px;
+		                line-height: 50px;                
+		                background-color: red;
+		                color: #FFFFFF;
+		            }
+	</style>
+	<script>
+		
+		function addEvent(element, event, listener) {
+		    if (element.addEventListener) {
+		        element.addEventListener(event, listener, false);
+		    }
+		    else if (element.attachEvent) {
+		        element.attachEvent("on" + event, listener);
+		    }
+		    else {
+		        element["on" + event] = listener;
+		    }
+		}
+
+		
+		function each(arr, fn) {  
+		    for (var cur = 0; cur < arr.length; cur++) {
+		        fn(arr[cur], cur);
+		    }
+		}
+
+		//将输入内容分隔为数组
+		function spiltInput(text){
+			var inputArray=[];
+			inputArray=(text).split(/[,，;；、\s\n]+/);
+			return inputArray;
+		}
+
+		//对textarea内的内容进行trim,否则当开都结尾有大量空格时会有bug
+		function trim(str){
+			var regex1=/^\s*/;
+			var regex2=/\s*$/;
+			return(str.replace(regex1,"")).replace(regex2,"");
+		}
+
+		window.onload = function() {
+		    var container = document.getElementById("container");
+		    var buttonList = document.getElementsByTagName("input");
+		    
+		    var queue = {
+		        str: [],
+		        
+		        leftPush: function(arr) {                     //arr
+		        	for(var cur in arr){                           // [cur]
+		        		this.str.unshift(arr[cur]);
+		        	}
+		            this.paint();
+		        },
+		        
+		        rightPush: function(arr) {                        //
+		        	for(var cur in arr){
+		        		this.str.push(arr[cur]);
+		        	}
+		            this.paint();
+		        },
+		        
+		        isEmpty: function() {
+		            return (this.str.length == 0);
+		        },
+		        
+		        leftPop: function() {
+		            if (!this.isEmpty()) {
+		                alert(this.str.shift());
+		                this.paint();
+		            }
+		            else {
+		                alert("The queue is already empty!");
+		            }
+		        },
+		        
+		        rightPop: function() {
+		            if (!this.isEmpty()) {
+		                alert(this.str.pop());
+		                this.paint();
+		            }
+		            else {
+		                alert("The queue is already empty!");
+		            }
+		        },
+		        
+		        paint: function() {
+		            var str = "";
+		            each(this.str, function(item){str += ("<div>" + item + "</div>")});         //
+		            container.innerHTML = str;
+		            addDivDelEvent();
+		        },
+		        
+		        deleteID: function(id) {
+		            console.log(id);
+		            this.str.splice(id, 1);
+		            this.paint();
+		        }
+		        
+		    }
+		    
+		    
+		    function addDivDelEvent() {
+		        for (var cur = 0; cur < container.childNodes.length; cur++) {
+		            
+		            
+		            addEvent(container.childNodes[cur], "click", function(cur) {
+		                return function(){return queue.deleteID(cur)};
+		            }(cur));
+		        }
+		    }
+
+
+		    //查询内容
+		    function searchDivContent(text){
+		    	for(var cur=0;cur,container.childNodes.length;cur++){
+		    		container.childNodes[cur].style.color="#fff";
+		    		container.childNodes[cur].style.background="red";
+		    	}
+
+		    	for(var cur=0;cur<container.childNodes.length;cur++){
+		    		if(container.childNodes[cur].innerHTML.indexOf(text)!=-1){
+		    			console.log(container.childNodes[cur].innerHTML);
+		    			container.childNodes[cur].style.color="green";
+		    			container.childNodes[cur].style.background="black";
+		    		}
+		    	}
+		    }
+		    
+		    
+		    addEvent(buttonList[0], "click", function() {
+		        var input = spiltInput(trim((document.getElementById("inputbox")).value));
+		        queue.leftPush(input);
+		    });
+		    addEvent(buttonList[1], "click", function() {
+		        var input = spiltInput(trim((document.getElementById("inputbox")).value));
+		        queue.rightPush(input);
+		    });
+		    addEvent(buttonList[2], "click", function(){queue.leftPop()});
+		    addEvent(buttonList[3], "click", function(){queue.rightPop()});
+
+		    addEvent(buttonList[5],"click",function(){
+		    	var inputValue=buttonList[4].value;
+		    	searchDivContent(inputValue);
+		    })
+		}
+	</script>
+</head>
+<body>
+	<textarea name="" id="inputbox">江蛤蛤，蛤三篇,哈斯、蛤啤   蛤宝 大新闻 华莱士</textarea>  <!-- 满汉全席 小鱼缸 旭旭 头目 师徒cp -->
+	<br>
+	<input type="button" value='左侧入'>
+	<input type="button" value='右侧入' style='margin-right:25px'>
+	<input type="button" value='左侧出'>
+	<input type="button" value='右侧出'>
+	<br>
+	<input type="text" placeholder="需要查询内容?">
+	<input type="button" value="查询">
+
+	<div id="container">
+</body>
+</html>
