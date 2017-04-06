@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>task 04</title>
+	<style>
+		body{
+			text-align: center;
+		}
+
+		#container div {
+		                display: inline-block;
+		                font-size: 30px;
+		                padding: 0 15px;
+		                margin: 2px 0;
+		                margin-right: 10px;
+		                height: 50px;
+		                line-height: 50px;                
+		                background-color: red;
+		                color: #FFFFFF;
+		            }
+	</style>
+	<script>
+	//兼容浏览器差异 事件绑定函数
+		function addEvent(element, event,listener){
+			if(element.addEventListener){
+				element.addEventListener(event,listener,false);
+			}else if(element.attachEvent){
+				element.attachEvent("on"+event,listener);
+			}else{
+				element["on"+event]=listener;
+			}
+		}
+
+		//让数组中的每个元素执行fn函数,
+		function each(arr,fn){
+			for(var i=0;i<arr.length;i++){
+				fn(arr[i],i);
+			}
+		}
+
+		window.onload=function(){
+			var container=document.getElementById('container');
+			var buttonList=document,getElementsByTagName('input');
+
+			//定义对象:队列queue,属性和方法
+			var queue={
+				str:[],
+
+				leftPush:function(num){
+					this.str.unshift(num);
+					this.paint();
+				},
+
+				paint:function(){
+					var str="";
+
+					each(this.str,
+						function(item){
+							str+=("<div>"+parseInt(item)+"</div>")
+						}
+						);
+
+					container.innerHTML=str;
+					addDivDelEvent();
+				},
+				delteID:function(id){
+					console.log(id);
+					this.str.splice(id,1);
+					this.paint;
+				}
+			}
+
+			//给container中的div绑定删除函数
+			function addDivDelEvent(){
+				for(var i=0;i<container.childNodes.length;i++){
+
+					addEvent(container.childNodes[i],"click",function(){
+						return function(){
+							return queue.delteID(i)
+						};
+					}(i));
+				}
+			}
+
+			//给input按钮绑定函数(4)
+			addEvent(buttonList[1],click,function(){
+				var input=buttonList[0].value;
+				if((/^[0-9]+$/).test(input)){
+					queue.leftPush(input);
+				}else{
+					alert("Please enter an interger!");
+				}
+			})
+		}
+
+
+	</script>
+</head>
+<body>
+	<input type="text" id="num-input">
+	<input type="button" value='左侧入'>
+	<input type="button" value='右侧入' style='margin-right:25px'>
+	<input type="button" value='左侧出'>
+	<input type="button" value='右侧出'>
+	<div id="container">
+</body>
+</html>
